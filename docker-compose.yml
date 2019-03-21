@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  eesti-ldap:
+    build: .
+    image: laurielias/eesti-ldap:latest
+    container_name: eesti-ldap
+    ports:
+      - 8000:8000 # Django
+    volumes:
+      - .:/home/docker/eesti_ldap
+    entrypoint: 'docker-entrypoint-dev.sh'
