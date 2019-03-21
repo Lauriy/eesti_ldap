@@ -10,3 +10,5 @@ services:
     volumes:
       - .:/home/docker/eesti_ldap
     entrypoint: 'docker-entrypoint-dev.sh'
+    environment:
+      - PYTHONUNBUFFERED=1
