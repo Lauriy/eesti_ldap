@@ -11,6 +11,9 @@ from eesti_ldap.models import IdCheckQuery
 logger = logging.getLogger(__name__)
 
 def frontpage(request):
+    # FIXME: Just for testing
+    # add.delay(4, 4)
+
     if request.method == 'POST':
         form = IdCheckQueryCreateForm(request.POST)
         if form.is_valid():

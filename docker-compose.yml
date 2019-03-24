@@ -1,6 +1,9 @@
 version: '3'
 
 services:
+  redis:
+    image: 'redis:alpine'
+    container_name: 'eesti-ldap-redis'
   eesti-ldap:
     build: .
     image: laurielias/eesti-ldap:latest
@@ -12,3 +15,43 @@ services:
     entrypoint: 'docker-entrypoint-dev.sh'
     environment:
       - PYTHONUNBUFFERED=1
+    depends_on:
+      - redis
+  celery-worker:
+    build: .
+    image: laurielias/eesti-ldap:latest
+    container_name: eesti-ldap-celery-worker
+    volumes:
+      - .:/home/docker/eesti_ldap
+    entrypoint: 'celery -A eesti_ldap worker -l info'
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - redis
+      - eesti-ldap
+  celery-beat:
+    build: .
+    image: laurielias/eesti-ldap:latest
+    container_name: eesti-ldap-celery-beat
+    volumes:
+      - .:/home/docker/eesti_ldap
+    entrypoint: 'celery -A eesti_ldap beat -l info'
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - redis
+      - eesti-ldap
+  celery-flower:
+    build: .
+    image: laurielias/eesti-ldap:latest
+    container_name: eesti-ldap-celery-flower
+    ports:
+      - 5555:5555 # Flower UI
+    volumes:
+      - .:/home/docker/eesti_ldap
+    entrypoint: 'celery -A eesti_ldap flower'
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - redis
+      - eesti-ldap

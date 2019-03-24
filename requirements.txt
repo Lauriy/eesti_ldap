@@ -3,3 +3,12 @@ requests
 mypy
 beautifulsoup4
 python-ldap
+Celery
+django-celery-results
+django-celery-beat
+flower
+redis
+hiredis
+django-redis-cache
+pytest-django
+pytest-xdist
