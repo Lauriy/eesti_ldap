@@ -1,14 +1,17 @@
 import datetime
 import logging
 
-import bs4
-import requests
-from django.shortcuts import render, redirect
+# import bs4
+# import requests
+from django.shortcuts import render
 
 from eesti_ldap.forms import IdCheckQueryCreateForm
-from eesti_ldap.models import IdCheckQuery
+# from eesti_ldap.models import IdCheckQuery
+from eesti_ldap.models import BirthDate
+from eesti_ldap.tasks import calculate_possible_national_ids_for_birthdate, retrieve_person_from_ldap, dmap
 
 logger = logging.getLogger(__name__)
+
 
 def frontpage(request):
     # FIXME: Just for testing
@@ -17,10 +20,12 @@ def frontpage(request):
     if request.method == 'POST':
         form = IdCheckQueryCreateForm(request.POST)
         if form.is_valid():
-            obj, created = IdCheckQuery.objects.get_or_create(input=form.cleaned_data['input'])
+            # obj, created = IdCheckQuery.objects.get_or_create(input=form.cleaned_data['input'])
 
-            return redirect('my_birthday', year=obj.input.year, month=f'{obj.input.month:02d}',
-                            day=f'{obj.input.day:02d}')
+            # return redirect('my_birthday', year=obj.input.year, month=f'{obj.input.month:02d}',
+            #                 day=f'{obj.input.day:02d}')
+
+            pass
     elif request.method == 'GET':
         form = IdCheckQueryCreateForm()
     else:
@@ -33,20 +38,9 @@ def frontpage(request):
 
 def my_birthday(request, year, month, day):
     birthday = datetime.date(int(year), int(month), int(day))
-    obj, created = IdCheckQuery.objects.get_or_create(input=birthday)
-
-    response = requests.post('http://id-check.artega.biz/pin-ba.php', data={
-        'dd': day,
-        'mm': month,
-        'yyyy': year,
-        'sex': 'u'
-    }, headers={
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'
-    })
-
-    parsed_response = bs4.BeautifulSoup(response.text, 'html.parser')
-
-    print(parsed_response.select('body > .cf > .tab'))
+    obj, created = BirthDate.objects.get_or_create(actual_date=birthday)
+    if not obj or not obj.possible_national_ids:
+        calculate_possible_national_ids_for_birthdate.apply_async((obj.pk,), link=dmap.s(retrieve_person_from_ldap.s()))
 
     return render(request, 'eesti_ldap/frontpage.html', {
 

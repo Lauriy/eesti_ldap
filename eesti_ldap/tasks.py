@@ -1,19 +1,39 @@
 from __future__ import absolute_import, unicode_literals
 
-import datetime
+import json
+from typing import List, Optional
 
-from celery import shared_task
+from celery import shared_task, group, subtask
+from django.db import transaction
+
+from eesti_ldap.estonian_national_id_code import generate_codes_for_birthdate
+from eesti_ldap.models import Person, BirthDate
+from eesti_ldap.sk_ldap_client import SkLdapClient
 
 
 @shared_task
-def add(x, y):
-    return x + y
+def calculate_possible_national_ids_for_birthdate(birth_date_pk: int) -> List[str]:
+    with transaction.atomic():
+        birth_date = BirthDate.objects.filter(pk=birth_date_pk).select_for_update().get()
+        # FIXME: Remove :100
+        codes = generate_codes_for_birthdate(birth_date.actual_date)[:100]
+        birth_date.possible_national_ids = json.dumps(codes)
+        birth_date.save()
 
-def generate_estonian_personal_codes_for_birthdate(birthdate: datetime.date):
-    if birthdate.year < 1900:
-        male_female_digits = [1, 2]
-    elif birthdate.year < 2000:
-        male_female_digits = [3, 4]
-    else:
-        male_female_digits = [5, 6]
-    birth_year_digits = [int(x) for x in str(birthdate.year)[2:]]
+    return codes
+
+
+@shared_task
+def retrieve_person_from_ldap(personal_code: str) -> Optional[Person]:
+    # TODO: Does this waste memory? SASL attempts?
+    sk_client = SkLdapClient()
+    ldap_response = sk_client.search_for_personal_code(personal_code)
+    if ldap_response:
+        return ldap_response
+
+
+@shared_task
+def dmap(iterable, callback):
+    callback = subtask(callback)
+
+    return group(callback.clone([arg, ]) for arg in iterable)()

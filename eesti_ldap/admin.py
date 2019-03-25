@@ -1,5 +1,6 @@
 from django.contrib import admin
 
-from eesti_ldap.models import IdCheckQuery
+from eesti_ldap.models import BirthHospital, BirthDate
 
-admin.site.register(IdCheckQuery)
+admin.site.register(BirthDate)
+admin.site.register(BirthHospital)

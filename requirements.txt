@@ -1,7 +1,5 @@
 Django
-requests
 mypy
-beautifulsoup4
 python-ldap
 Celery
 django-celery-results
@@ -12,3 +10,6 @@ hiredis
 django-redis-cache
 pytest-django
 pytest-xdist
+pytest-cov
+psycopg2-binary
+pytest-pgsql

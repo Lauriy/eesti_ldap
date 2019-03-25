@@ -15,6 +15,5 @@ python manage.py createsuperuser
 
 ```bash
 docker exec -it eesti-ldap sh
-# Number of threads
-pytest -n 8
+pytest
 ```
