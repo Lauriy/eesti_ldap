@@ -15,10 +15,12 @@ from eesti_ldap.sk_ldap_client import SkLdapClient
 def calculate_possible_national_ids_for_birthdate(birth_date_pk: int) -> List[str]:
     with transaction.atomic():
         birth_date = BirthDate.objects.filter(pk=birth_date_pk).select_for_update().get()
-        # FIXME: Remove :100
-        codes = generate_codes_for_birthdate(birth_date.actual_date)[:100]
-        birth_date.possible_national_ids = json.dumps(codes)
-        birth_date.save()
+        if not birth_date.possible_national_ids:
+            codes = generate_codes_for_birthdate(birth_date.actual_date)
+            birth_date.possible_national_ids = json.dumps(codes)
+            birth_date.save()
+        else:
+            codes = json.loads(birth_date.possible_national_ids)
 
     return codes
 
@@ -26,10 +28,11 @@ def calculate_possible_national_ids_for_birthdate(birth_date_pk: int) -> List[st
 @shared_task
 def retrieve_person_from_ldap(personal_code: str) -> Optional[Person]:
     # TODO: Does this waste memory? SASL attempts?
-    sk_client = SkLdapClient()
-    ldap_response = sk_client.search_for_personal_code(personal_code)
-    if ldap_response:
-        return ldap_response
+    return 'test'
+    #sk_client = SkLdapClient()
+    #ldap_response = sk_client.search_for_personal_code(personal_code)
+    #if ldap_response:
+        #return ldap_response
 
 
 @shared_task

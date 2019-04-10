@@ -15,6 +15,14 @@ def calculate_birth_year(personal_code: str) -> int:
     return int(f'{year_digits}{personal_code[1:3]}')
 
 
+def convert_to_birthdate(personal_code: str) -> datetime.date:
+    birth_year = calculate_birth_year(personal_code)
+    birth_month = int(personal_code[3:5])
+    birth_day = int(personal_code[5:7])
+
+    return datetime.date(year=birth_year, month=birth_month, day=birth_day)
+
+
 def try_to_guess_birth_hospital(personal_code: str) -> Optional[BirthHospital]:
     birth_year = calculate_birth_year(personal_code)
     # https://et.wikipedia.org/wiki/Isikukood#Haigla_tunnus

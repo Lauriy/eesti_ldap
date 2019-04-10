@@ -25,6 +25,8 @@ class BirthDate(models.Model):
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     modified = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.actual_date.isoformat()
 
 class Person(models.Model):
     personal_code = models.CharField(max_length=255, unique=True)
@@ -34,3 +36,6 @@ class Person(models.Model):
     birth_hospital = models.ForeignKey(BirthHospital, blank=True, null=True, on_delete='PROTECT')
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '%s %s - %s' % (self.first_name, self.last_name, self.birth_date)

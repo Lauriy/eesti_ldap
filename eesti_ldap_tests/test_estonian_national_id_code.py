@@ -5,16 +5,24 @@ import os
 import pytest
 
 from eesti_ldap.estonian_national_id_code import generate_codes_for_birthdate, calculate_check_digit, \
-    calculate_birth_year
+    calculate_birth_year, convert_to_birthdate
 
 
 @pytest.mark.parametrize(('national_id_code', 'expected_year'), [
-    ('39004020251', '1990'),
-    ('38401180294', '1984'),
-    ('61703300095', '2017')
+    ('39004020251', 1990),
+    ('38401180294', 1984),
+    ('61703300095', 2017)
 ])
 def test_calculate_birth_year(national_id_code: str, expected_year: str):
     assert (calculate_birth_year(national_id_code) == expected_year)
+
+@pytest.mark.parametrize(('national_id_code', 'expected_date'), [
+    ('39004020251', datetime.date(year=1990, month=4, day=2)),
+    ('38401180294', datetime.date(year=1984, month=1, day=18)),
+    ('61703300095', datetime.date(year=2017, month=3, day=30))
+])
+def test_convert_to_birthdate(national_id_code: str, expected_date: datetime.date):
+    assert (convert_to_birthdate(national_id_code) == expected_date)
 
 
 @pytest.mark.parametrize(('national_id_code', 'expected_digit'), [

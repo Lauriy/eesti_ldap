@@ -1,10 +1,10 @@
 version: '3'
 
 services:
-  redis:
+  eesti-ldap-redis:
     image: 'redis:alpine'
     container_name: 'eesti-ldap-redis'
-  db:
+  eesti-ldap-postgres:
     image: 'mdillon/postgis:11-alpine'
     container_name: 'eesti-ldap-postgres'
     restart: always
@@ -28,9 +28,9 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     depends_on:
-      - redis
-      - db
-  celery-worker:
+      - eesti-ldap-redis
+      - eesti-ldap-postgres
+  eesti-ldap-celery-worker:
     build: .
     image: laurielias/eesti-ldap:latest
     container_name: eesti-ldap-celery-worker
@@ -40,10 +40,10 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     depends_on:
-      - redis
-      - db
+      - eesti-ldap-redis
+      - eesti-ldap-postgres
       - eesti-ldap
-  celery-beat:
+  eesti-ldap-celery-beat:
     build: .
     image: laurielias/eesti-ldap:latest
     container_name: eesti-ldap-celery-beat
@@ -53,10 +53,10 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     depends_on:
-      - redis
-      - db
+      - eesti-ldap-redis
+      - eesti-ldap-postgres
       - eesti-ldap
-  celery-flower:
+  eesti-ldap-celery-flower:
     build: .
     image: laurielias/eesti-ldap:latest
     container_name: eesti-ldap-celery-flower
@@ -68,6 +68,6 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     depends_on:
-      - redis
-      - db
+      - eesti-ldap-redis
+      - eesti-ldap-postgres
       - eesti-ldap
