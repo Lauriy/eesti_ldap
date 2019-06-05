@@ -132,3 +132,5 @@ CACHES = {
         },
     },
 }
+
+SK_LDAP_MAX_PAGE_SIZE = 50

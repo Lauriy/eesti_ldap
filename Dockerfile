@@ -11,6 +11,8 @@ COPY requirements.txt ./
 RUN pip install --upgrade setuptools pip wheel && \
     pip wheel -r requirements.txt --wheel-dir=./wheels/
 
+ENTRYPOINT ["pytest"]
+
 FROM python:3.7-slim AS deployer
 
 # TODO: Clean up junk

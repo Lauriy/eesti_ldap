@@ -16,6 +16,7 @@ from eesti_ldap.estonian_national_id_code import generate_codes_for_birthdate, c
 def test_calculate_birth_year(national_id_code: str, expected_year: str):
     assert (calculate_birth_year(national_id_code) == expected_year)
 
+
 @pytest.mark.parametrize(('national_id_code', 'expected_date'), [
     ('39004020251', datetime.date(year=1990, month=4, day=2)),
     ('38401180294', datetime.date(year=1984, month=1, day=18)),
