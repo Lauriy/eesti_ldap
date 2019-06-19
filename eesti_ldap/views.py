@@ -23,8 +23,6 @@ def frontpage(request):
             return redirect('my_birthday', year=form.cleaned_data['input'].year,
                             month=f'{form.cleaned_data["input"].month:02d}',
                             day=f'{form.cleaned_data["input"].day:02d}')
-
-            pass
     elif request.method == 'GET':
         form = IdCheckQueryCreateForm()
     else:

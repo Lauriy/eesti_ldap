@@ -17,6 +17,4 @@ class SkLdapClient:
             query_parts.append(f'(serialNumber=PNOEE-{personal_code})')
         query_string = '(|' + ''.join(query_parts) + ')'
 
-        print(query_string)
-
         return self.ldap_client.search_s('c=EE', ldap.SCOPE_SUBTREE, query_string)

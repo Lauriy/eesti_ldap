@@ -13,3 +13,5 @@ pytest-xdist
 pytest-cov
 psycopg2-binary
 pytest-pgsql
+channels
+channels_redis

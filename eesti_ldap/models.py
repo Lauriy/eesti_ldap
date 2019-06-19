@@ -4,7 +4,7 @@ from django.db import models
 
 
 class SkEeLdapQuery(models.Model):
-    input = models.TextField()
+    input = models.TextField(db_index=True, unique=True)
     response = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     modified = models.DateTimeField(auto_now=True)
@@ -27,6 +27,7 @@ class BirthDate(models.Model):
 
     def __str__(self):
         return self.actual_date.isoformat()
+
 
 class Person(models.Model):
     personal_code = models.CharField(max_length=255, unique=True)

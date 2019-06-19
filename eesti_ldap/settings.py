@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_results',
-    'eesti_ldap'
+    'eesti_ldap',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -76,7 +77,7 @@ DATABASES = {
         'NAME': 'eesti_ldap',
         'USER': 'eesti_ldap',
         'PASSWORD': 'saladus',
-        'HOST': 'eesti-ldap-postgres'
+        'HOST': 'postgres'
     }
 }
 
@@ -117,13 +118,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BROKER_URL = 'redis://eesti-ldap-redis:6379'
+CELERY_BROKER_URL = 'redis://redis:6379'
 
 # Since Celery makes us use Redis anyway, use it some more
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.RedisCache',
-        'LOCATION': 'eesti-ldap-redis:6379',
+        'LOCATION': 'redis:6379',
         'OPTIONS': {
             'DB': 1,
             'PARSER_CLASS': 'redis.connection.HiredisParser',
@@ -134,3 +135,14 @@ CACHES = {
 }
 
 SK_LDAP_MAX_PAGE_SIZE = 50
+
+ASGI_APPLICATION = 'eesti_ldap.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': ['redis://redis:6379/2']
+        }
+    },
+}

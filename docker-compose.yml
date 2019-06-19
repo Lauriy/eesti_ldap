@@ -1,13 +1,12 @@
 version: '3'
 
 services:
-  eesti-ldap-redis:
-    image: 'redis:alpine'
-    container_name: 'eesti-ldap-redis'
-  eesti-ldap-postgres:
+  redis:
+    image: 'redis:5-alpine'
+    container_name: 'redis'
+  postgres:
     image: 'postgres:11-alpine'
-    container_name: 'eesti-ldap-postgres'
-    restart: always
+    container_name: 'postgres'
     ports:
       - '5434:5432'
     environment:
@@ -28,8 +27,8 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     depends_on:
-      - eesti-ldap-redis
-      - eesti-ldap-postgres
+      - redis
+      - postgres
   eesti-ldap-celery-worker:
     build: .
     image: laurielias/eesti-ldap:latest
@@ -40,8 +39,8 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     depends_on:
-      - eesti-ldap-redis
-      - eesti-ldap-postgres
+      - redis
+      - postgres
       - eesti-ldap
   eesti-ldap-celery-beat:
     build: .
@@ -53,8 +52,8 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     depends_on:
-      - eesti-ldap-redis
-      - eesti-ldap-postgres
+      - redis
+      - postgres
       - eesti-ldap
   eesti-ldap-celery-flower:
     build: .
@@ -68,6 +67,6 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     depends_on:
-      - eesti-ldap-redis
-      - eesti-ldap-postgres
+      - redis
+      - postgres
       - eesti-ldap
