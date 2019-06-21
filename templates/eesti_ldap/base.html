@@ -1,5 +1,10 @@
-<html>
+{% load static %}
+
+<html lang='en'>
 <body>
 {% block content %}{% endblock %}
+{% block static %}
+    <script src="{% static 'js/birthday.js' %}"></script>
+{% endblock %}
 </body>
 </html>

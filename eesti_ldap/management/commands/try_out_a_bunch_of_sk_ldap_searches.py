@@ -363,7 +363,7 @@ class Command(BaseCommand):
                 result = str(client.search_for_personal_codes(codes_to_ask_about))
                 cached.response = json.dumps(result)
                 cached.save()
-                sleep(10)
+                sleep(5)
             else:
                 result = json.loads(cached.response)
             for entry in ast.literal_eval(result):
