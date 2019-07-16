@@ -78,7 +78,7 @@ DATABASES = {
         'NAME': 'eesti_ldap',
         'USER': 'eesti_ldap',
         'PASSWORD': 'saladus',
-        'HOST': 'postgres'
+        'HOST': 'host.docker.internal'
     }
 }
 

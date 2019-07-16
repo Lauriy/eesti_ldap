@@ -1,7 +1,5 @@
 FROM python:3.7 AS builder
 
-LABEL maintainer="Lauri Elias <lauri.elias@indoorsman.ee>"
-
 RUN apt-get update && apt-get install libldap2-dev libsasl2-dev
 
 WORKDIR /home/docker/eesti_ldap
@@ -14,6 +12,8 @@ RUN pip install --upgrade setuptools pip wheel && \
 ENTRYPOINT ["pytest"]
 
 FROM python:3.7-slim AS deployer
+
+LABEL maintainer="Lauri Elias <lauri.elias@indoorsman.ee>"
 
 WORKDIR /home/docker/eesti_ldap
 

@@ -4,17 +4,18 @@ services:
   redis:
     image: 'redis:5-alpine'
     container_name: 'redis'
-  postgres:
-    image: 'postgres:11-alpine'
-    container_name: 'postgres'
-    ports:
-      - '5434:5432'
-    environment:
-      - POSTGRES_DB=eesti_ldap
-      - POSTGRES_USER=eesti_ldap
-      - POSTGRES_PASSWORD=saladus
-    volumes:
-      - ./postgresql:/var/lib/postgresql
+# Tunnel it
+#  postgres:
+#    image: 'postgres:11-alpine'
+#    container_name: 'postgres'
+#    ports:
+#      - '5434:5432'
+#    environment:
+#      - POSTGRES_DB=eesti_ldap
+#      - POSTGRES_USER=eesti_ldap
+#      - POSTGRES_PASSWORD=saladus
+#    volumes:
+#      - ./postgresql:/var/lib/postgresql
   eesti-ldap:
     build: .
     image: laurielias/eesti-ldap:latest
@@ -28,7 +29,7 @@ services:
       - PYTHONUNBUFFERED=1
     depends_on:
       - redis
-      - postgres
+#      - postgres
   eesti-ldap-celery-worker:
     build: .
     image: laurielias/eesti-ldap:latest
@@ -40,7 +41,7 @@ services:
       - PYTHONUNBUFFERED=1
     depends_on:
       - redis
-      - postgres
+#      - postgres
       - eesti-ldap
   eesti-ldap-celery-beat:
     build: .
@@ -53,7 +54,7 @@ services:
       - PYTHONUNBUFFERED=1
     depends_on:
       - redis
-      - postgres
+#      - postgres
       - eesti-ldap
   eesti-ldap-celery-flower:
     build: .
@@ -68,5 +69,5 @@ services:
       - PYTHONUNBUFFERED=1
     depends_on:
       - redis
-      - postgres
+#      - postgres
       - eesti-ldap

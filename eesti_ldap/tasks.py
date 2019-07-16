@@ -1,8 +1,7 @@
 from __future__ import absolute_import, unicode_literals
 
 import json
-from time import sleep
-from typing import List, Optional
+from typing import List
 
 from asgiref.sync import async_to_sync
 from celery import shared_task, group, subtask
@@ -10,8 +9,7 @@ from channels.layers import get_channel_layer
 from django.db import transaction
 
 from eesti_ldap.estonian_national_id_code import generate_codes_for_birthdate
-from eesti_ldap.models import Person, BirthDate
-from eesti_ldap.sk_ldap_client import SkLdapClient
+from eesti_ldap.models import BirthDate
 
 
 @shared_task
@@ -24,7 +22,7 @@ def calculate_possible_national_ids_for_birthdate(birth_date_pk: int) -> List[st
             birth_date.save()
             channel_layer = get_channel_layer()
             async_to_sync(channel_layer.group_send)(
-                'birthdate_%d_%d_%d' % (birth_date.year, birth_date.month, birth_date.year.day), {
+                'birthdate_%d_%d_%d' % (birth_date.actual_date.year, birth_date.actual_date.month, birth_date.actual_date.day), {
                     'type': 'birthdate.message',
                     'message': birth_date.possible_national_ids
                 })
