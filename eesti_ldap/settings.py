@@ -24,7 +24,7 @@ SECRET_KEY = 'w1od8!u&q8jt*-0gm&!hjw(9yy#mio-&(hnhes38wf#guo#$!u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0']
 
 # Application definition
 
@@ -78,7 +78,8 @@ DATABASES = {
         'NAME': 'eesti_ldap',
         'USER': 'eesti_ldap',
         'PASSWORD': 'saladus',
-        'HOST': 'host.docker.internal'
+        'HOST': 'localhost',
+        'PORT': '5434'
     }
 }
 
@@ -119,13 +120,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BROKER_URL = 'redis://redis:6379'
+CELERY_BROKER_URL = 'redis://localhost:6379'
 
 # Since Celery makes us use Redis anyway, use it some more
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.RedisCache',
-        'LOCATION': 'redis:6379',
+        'LOCATION': 'localhost:6379',
         'OPTIONS': {
             'DB': 1,
             'PARSER_CLASS': 'redis.connection.HiredisParser',
@@ -135,7 +136,7 @@ CACHES = {
     },
 }
 
-SK_LDAP_MAX_PAGE_SIZE = 50
+SK_LDAP_MAX_PAGE_SIZE = 40
 
 ASGI_APPLICATION = 'eesti_ldap.routing.application'
 
@@ -143,7 +144,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': ['redis://redis:6379/2']
+            'hosts': ['redis://localhost:6379/2']
         }
     },
 }
