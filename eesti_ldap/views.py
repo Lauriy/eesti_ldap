@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect
 from eesti_ldap.forms import IdCheckQueryCreateForm
 # from eesti_ldap.models import IdCheckQuery
 from eesti_ldap.models import BirthDate
-from eesti_ldap.tasks import calculate_possible_national_ids_for_birthdate, dmap
+from eesti_ldap.tasks import calculate_possible_national_ids_for_birthdate
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ def my_birthday(request, year, month, day):
     # For validation
     birthdate = datetime.date(year=int(year), month=int(month), day=int(day))
     obj, created = BirthDate.objects.get_or_create(actual_date=birthdate)
-    if not obj or not obj.possible_national_ids:
+    if not obj.possible_national_ids:
         # Always enqueue ID generation code if we don't have them generated already
         calculate_possible_national_ids_for_birthdate.apply_async((obj.pk,))
 

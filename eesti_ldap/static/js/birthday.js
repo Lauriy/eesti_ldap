@@ -9,8 +9,8 @@ birthdaySocket.onclose = () => {
     console.error('Socket closed unexpectedly.');
 };
 
-document.querySelector('#query-birthday-data-button').onclick = () => {
-    birthdaySocket.send(JSON.stringify({
-        'message': 123
-    }));
-};
+// document.querySelector('#query-birthday-data-button').onclick = () => {
+//     birthdaySocket.send(JSON.stringify({
+//         'message': 123
+//     }));
+// };

@@ -24,6 +24,7 @@ class BirthDate(models.Model):
     possible_national_ids = JSONField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     modified = models.DateTimeField(auto_now=True)
+    search_exhausted = models.BooleanField(default=False)
 
     def __str__(self):
         return self.actual_date.isoformat()
