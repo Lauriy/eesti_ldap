@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.5'
 
 services:
   redis:
@@ -40,6 +40,7 @@ services:
     volumes:
       - ./settings.py:/home/docker/eesti_ldap/eesti_ldap/settings.py
       - ./run:/home/docker/eesti_ldap/run
+      - ./static:/home/docker/eesti_ldap/static
     # ports:
     #   - 8000:8000
     # volumes:
