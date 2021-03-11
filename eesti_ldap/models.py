@@ -35,7 +35,7 @@ class Person(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     birth_date = models.ForeignKey(BirthDate, on_delete='PROTECT', related_name='people')
-    birth_hospital = models.ForeignKey(BirthHospital, blank=True, null=True, on_delete='PROTECT')
+    # birth_hospital = models.ForeignKey(BirthHospital, blank=True, null=True, on_delete='PROTECT')
     created = models.DateTimeField(auto_now_add=True, db_index=True)
     modified = models.DateTimeField(auto_now=True)
 

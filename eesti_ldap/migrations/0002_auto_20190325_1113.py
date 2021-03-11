@@ -2,12 +2,11 @@
 
 import django.contrib.postgres.fields.jsonb
 import django.core.validators
-from django.db import migrations, models
 import django.utils.timezone
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('eesti_ldap', '0001_initial'),
     ]
@@ -28,8 +27,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=255)),
-                ('latitude', models.FloatField(validators=[django.core.validators.MinValueValidator(-85.05115), django.core.validators.MaxValueValidator(85)])),
-                ('longitude', models.FloatField(validators=[django.core.validators.MinValueValidator(-180), django.core.validators.MaxValueValidator(180)])),
+                ('latitude', models.FloatField(validators=[django.core.validators.MinValueValidator(-85.05115),
+                                                           django.core.validators.MaxValueValidator(85)])),
+                ('longitude', models.FloatField(validators=[django.core.validators.MinValueValidator(-180),
+                                                            django.core.validators.MaxValueValidator(180)])),
                 ('created', models.DateTimeField(auto_now_add=True, db_index=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
             ],
@@ -43,8 +44,10 @@ class Migration(migrations.Migration):
                 ('last_name', models.CharField(max_length=255)),
                 ('created', models.DateTimeField(auto_now_add=True, db_index=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('birth_date', models.ForeignKey(on_delete='PROTECT', related_name='people', to='eesti_ldap.BirthDate')),
-                ('birth_hospital', models.ForeignKey(blank=True, null=True, on_delete='PROTECT', to='eesti_ldap.BirthHospital')),
+                (
+                'birth_date', models.ForeignKey(on_delete='PROTECT', related_name='people', to='eesti_ldap.BirthDate')),
+                ('birth_hospital',
+                 models.ForeignKey(blank=True, null=True, on_delete='PROTECT', to='eesti_ldap.BirthHospital')),
             ],
         ),
         migrations.DeleteModel(

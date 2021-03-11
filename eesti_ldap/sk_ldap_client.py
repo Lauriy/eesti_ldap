@@ -1,6 +1,7 @@
 from typing import List
-from django.conf import settings
+
 import ldap
+from django.conf import settings
 
 
 class SkLdapClient:

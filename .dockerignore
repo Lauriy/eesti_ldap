@@ -1,1 +1,6 @@
+/.coverage
 
+/venv/
+/.pytest_cache/
+/htmlcov/
+/postgresql/

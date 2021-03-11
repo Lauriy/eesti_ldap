@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   redis:
@@ -7,10 +7,10 @@ services:
     ports:
       - 6379:6379
   postgres:
-    image: 'postgres:11-alpine'
+    image: 'postgres:13-alpine'
     container_name: 'postgres'
     ports:
-      - '5434:5432'
+      - '5432:5432'
     environment:
       - POSTGRES_DB=eesti_ldap
       - POSTGRES_USER=eesti_ldap
@@ -31,6 +31,20 @@ services:
     depends_on:
       - redis
       - postgres
+  eesti-ldap-prod:
+    image: laurielias/eesti-ldap:latest
+    container_name: eesti-ldap
+    depends_on:
+      - redis
+      - postgres
+    volumes:
+      - ./settings.py:/home/docker/eesti_ldap/eesti_ldap/settings.py
+      - ./run:/home/docker/eesti_ldap/run
+    # ports:
+    #   - 8000:8000
+    # volumes:
+    #   - .:/home/docker/eesti_ldap
+    # entrypoint: 'tail -f /dev/null'
   eesti-ldap-celery-worker:
     build: .
     image: laurielias/eesti-ldap:latest

@@ -1,5 +1,8 @@
 /.idea/
 /venv/
 /postgresql/
+/htmlcov/
+/.pytest_cache/
 
 /db.sqlite3
+/.coverage

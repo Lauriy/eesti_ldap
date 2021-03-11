@@ -4,7 +4,7 @@ import json
 from math import ceil
 from typing import List
 
-from celery import shared_task
+from celery import shared_task, subtask, group
 from django.conf import settings
 from django.db import transaction
 
@@ -47,24 +47,6 @@ def enqueue_personal_code_query_batches():
             # We're done for this interval
             break
 
-            # cached, created = SkEeLdapQuery.objects.get_or_create(input=', '.join(codes_to_ask_about))
-            # if cached.response is None:
-            #     result = str(client.search_for_personal_codes(codes_to_ask_about))
-            #     cached.response = json.dumps(result)
-            #     cached.save()
-            #     sleep(5)
-            # else:
-            #     result = json.loads(cached.response)
-            # for entry in ast.literal_eval(result):
-            #     person_data = entry[1]['cn'][0].decode('utf-8').split(',')
-            #     name = HumanName(' '.join([person_data[1], person_data[0]]))
-            #     name.capitalize(force=True)
-            #     person, created = Person.objects.get_or_create(personal_code=person_data[2], birth_date=birthdate)
-            #     if created:
-            #         person.first_name = ' '.join([name.first, name.middle])
-            #         person.last_name = name.last
-            #         person.save()
-
 
 @shared_task
 def calculate_possible_national_ids_for_birthdate(birth_date_pk: int) -> List[str]:
@@ -73,12 +55,6 @@ def calculate_possible_national_ids_for_birthdate(birth_date_pk: int) -> List[st
         codes = generate_codes_for_birthdate(birth_date.actual_date)
         birth_date.possible_national_ids = json.dumps(codes)
         birth_date.save()
-        # channel_layer = get_channel_layer()
-        # async_to_sync(channel_layer.group_send)(
-        #     'birthdate_%d_%d_%d' % (birth_date.actual_date.year, birth_date.actual_date.month, birth_date.actual_date.day), {
-        #         'type': 'birthdate.message',
-        #         'message': birth_date.possible_national_ids
-        #     })
 
     return codes
 
@@ -86,15 +62,11 @@ def calculate_possible_national_ids_for_birthdate(birth_date_pk: int) -> List[st
 @shared_task
 def retrieve_batch_of_people_from_ldap(personal_code: List[str], is_last_batch: bool) -> List[str]:
     return ['test']
-    # TODO: Does this waste memory? SASL attempts?
-    # sk_client = SkLdapClient()
-    # ldap_response = sk_client.search_for_personal_code(personal_code)
-    # if ldap_response:
-    # return ldap_response
+
 
 # Can be used to link an array of follow-up tasks on completion of the 'mother'-task
-# @shared_task
-# def dmap(iterable, callback):
-#     callback = subtask(callback)
-#
-#     return group(callback.clone([arg, ]) for arg in iterable)()
+@shared_task
+def dmap(iterable, callback):
+    callback = subtask(callback)
+
+    return group(callback.clone([arg, ]) for arg in iterable)()

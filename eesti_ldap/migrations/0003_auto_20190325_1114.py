@@ -5,7 +5,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('eesti_ldap', '0002_auto_20190325_1113'),
     ]

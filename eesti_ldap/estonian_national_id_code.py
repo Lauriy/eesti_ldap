@@ -67,7 +67,8 @@ def generate_codes_for_birthdate(birthdate: datetime.date) -> List[str]:
     for male_female_digit in male_female_digits:
         for birth_order in range(0, 1000):
             birth_order_digits = f'{birth_order:03d}'
-            partial_code = f'{male_female_digit}{birth_year_digits}{birth_month_digits}{birth_day_digits}{birth_order_digits}'
+            partial_code = f'{male_female_digit}{birth_year_digits}{birth_month_digits}' \
+                           f'{birth_day_digits}{birth_order_digits}'
             check_digit = calculate_check_digit(partial_code)
             code_to_try = f'{partial_code}{check_digit}'
             codes.append(code_to_try)

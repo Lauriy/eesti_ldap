@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from eesti_ldap.models import BirthHospital, BirthDate
+from eesti_ldap.models import BirthDate, Person
 
 admin.site.register(BirthDate)
-admin.site.register(BirthHospital)
+admin.site.register(Person)
+# admin.site.register(BirthHospital)

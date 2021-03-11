@@ -1,4 +1,3 @@
-import ast
 import json
 import os
 from unittest import mock
@@ -20,13 +19,3 @@ def test_search_for_personal_code(patched_function):
     response = client.search_for_personal_codes(codes_to_try[:50])
 
     assert (response == ldap_response)
-
-
-def test_parse_ldap_result():
-    # TODO: Extract to function
-    parsed_personal_data = str(ast.literal_eval(ldap_response)[0][1]['cn'][0])[2:].split(',')
-    first_name = parsed_personal_data[1].capitalize()
-    last_name = parsed_personal_data[0].capitalize()
-
-    assert first_name == 'Margus'
-    assert last_name == 'Piispea'
