@@ -65,4 +65,4 @@ class Command(BaseCommand):
                     page += 1
                 birthdate.search_exhausted = True
                 birthdate.save()
-                current += delta
+            current += delta
