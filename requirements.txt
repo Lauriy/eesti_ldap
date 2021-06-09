@@ -1,4 +1,4 @@
-django==2.2.19
+django==2.2.22
 mypy==0.812
 python-ldap==3.3.1
 celery==4.4.7
